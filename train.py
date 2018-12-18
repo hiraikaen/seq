@@ -6,6 +6,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import time
 
 #print('torch.ava:', torch.cuda.is_available())
 #device = torch.device("cpu")
@@ -61,14 +62,16 @@ if __name__ == '__main__':
     # use LBFGS as optimizer since we can load the whole data to train
     optimizer = optim.LBFGS(seq.parameters(), lr=0.8)
     #begin to train
-    for i in range(15):
+    for i in range(7):
         print('STEP: ', i)
         def closure():
+            time_start = time.time()
             optimizer.zero_grad()
             out = seq(input)
             loss = criterion(out, target)
-            print('loss:', loss.item())
             loss.backward()
+            time_elapsed = time.time() - time_start
+            print('loss:', loss.item(), 't:', time_elapsed)
             return loss
         optimizer.step(closure)
         # begin to predict, no need to track gradient here
